@@ -118,7 +118,23 @@ const DoctorDashboard = () => {
               </div>
             </div>
             {nextAppointment && (
-              <div className='bg-blue-50 p-3 rounded-lg'>
+              <div className='bg-blue-50 p-3 rounded-lg relative'>
+                {!nextAppointment.cancelled && !nextAppointment.isCompleted && (
+                  <button 
+                    onClick={() => {
+                      // First set the appointment ID
+                      setSelectedAppointmentId(nextAppointment._id);
+                      // Then show the modal in the next render cycle
+                      setTimeout(() => {
+                        setShowCancellationModal(true);
+                      }, 0);
+                    }}
+                    className='absolute top-2 right-2 p-1.5 hover:bg-red-50 rounded-full transition-colors'
+                    title="Cancel Appointment"
+                  >
+                    <img className='w-5 h-5' src={assets.cancel_icon} alt="Cancel" />
+                  </button>
+                )}
                 <p className='text-gray-800 font-medium'>{slotDateFormat(nextAppointment.slotDate)}</p>
                 <p className='text-gray-600 font-medium mt-1 flex items-center'>
                   <span className='bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-2'>{nextAppointment.slotTime}</span>
