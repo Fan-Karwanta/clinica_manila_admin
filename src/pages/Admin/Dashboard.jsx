@@ -3,11 +3,16 @@ import { assets } from '../../assets/assets'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
 import { useNavigate } from 'react-router-dom'
+import CancellationModal from '../../components/CancellationModal'
 
 const Dashboard = () => {
   const { aToken, getDashData, cancelAppointment, dashData, appointments, getAllAppointments } = useContext(AdminContext)
   const { slotDateFormat } = useContext(AppContext)
   const navigate = useNavigate()
+  
+  // State for cancellation modal
+  const [showCancellationModal, setShowCancellationModal] = useState(false)
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null)
 
   // State for dashboard components
   const [weekdayDistribution, setWeekdayDistribution] = useState([])
@@ -295,7 +300,10 @@ const Dashboard = () => {
                         ) : (
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => cancelAppointment(item._id)}
+                              onClick={() => {
+                                setSelectedAppointmentId(item._id);
+                                setShowCancellationModal(true);
+                              }}
                               className='p-1.5 hover:bg-red-50 rounded-full transition-colors'
                               title="Cancel Appointment"
                             >
@@ -410,6 +418,22 @@ const Dashboard = () => {
           </div>
         </>
       )}
+      {/* Cancellation Modal */}
+      <CancellationModal 
+        isOpen={showCancellationModal}
+        onClose={() => {
+          setShowCancellationModal(false);
+          setSelectedAppointmentId(null);
+        }}
+        onConfirm={(reason) => {
+          if (selectedAppointmentId) {
+            cancelAppointment(selectedAppointmentId, reason);
+            setShowCancellationModal(false);
+            setSelectedAppointmentId(null);
+          }
+        }}
+        title="Cancel Appointment"
+      />
     </div>
   )
 }
