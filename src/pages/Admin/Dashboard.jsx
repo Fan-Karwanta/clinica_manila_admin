@@ -301,8 +301,12 @@ const Dashboard = () => {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => {
+                                // First set the appointment ID
                                 setSelectedAppointmentId(item._id);
-                                setShowCancellationModal(true);
+                                // Then show the modal in the next render cycle
+                                setTimeout(() => {
+                                  setShowCancellationModal(true);
+                                }, 0);
                               }}
                               className='p-1.5 hover:bg-red-50 rounded-full transition-colors'
                               title="Cancel Appointment"

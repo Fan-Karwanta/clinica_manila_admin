@@ -300,8 +300,12 @@ const DoctorDashboard = () => {
                         <div className='flex gap-3'>
                           <button
                             onClick={() => {
+                              // First set the appointment ID
                               setSelectedAppointmentId(item._id);
-                              setShowCancellationModal(true);
+                              // Then show the modal in the next render cycle
+                              setTimeout(() => {
+                                setShowCancellationModal(true);
+                              }, 0);
                             }}
                             className='p-2.5 hover:bg-red-50 rounded-lg transition-colors group relative'
                             title="Cancel appointment"
