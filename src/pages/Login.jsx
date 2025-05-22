@@ -4,6 +4,7 @@ import { DoctorContext } from '../context/DoctorContext'
 import { AdminContext } from '../context/AdminContext'
 import { toast } from 'react-toastify'
 import { assets } from '../assets/assets'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 
@@ -11,11 +12,13 @@ const Login = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL
 
   const { setDToken } = useContext(DoctorContext)
   const { setAToken } = useContext(AdminContext)
+  const navigate = useNavigate()
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -36,6 +39,8 @@ const Login = () => {
       if (data.success) {
         setDToken(data.token)
         localStorage.setItem('dToken', data.token)
+        toast.success('Doctor login successful!')
+        navigate('/doctor-dashboard')
       } else {
         toast.error(data.message)
       }
@@ -73,7 +78,23 @@ const Login = () => {
         </div>
         <div className='w-full '>
           <p>Password</p>
-          <input onChange={(e) => setPassword(e.target.value)} value={password} className='border border-[#DADADA] rounded w-full p-2 mt-1' type="password" required />
+          <input 
+            onChange={(e) => setPassword(e.target.value)} 
+            value={password} 
+            className='border border-[#DADADA] rounded w-full p-2 mt-1' 
+            type={showPassword ? "text" : "password"} 
+            required 
+          />
+          <div className="flex items-center mt-2">
+            <input 
+              type="checkbox" 
+              id="showPassword" 
+              checked={showPassword} 
+              onChange={() => setShowPassword(!showPassword)} 
+              className="mr-2"
+            />
+            <label htmlFor="showPassword" className="text-sm cursor-pointer">Show Password</label>
+          </div>
         </div>
         <button className='bg-primary text-white w-full py-2 rounded-md text-base'>Login</button>
         

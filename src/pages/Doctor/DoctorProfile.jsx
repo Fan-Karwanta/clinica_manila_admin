@@ -211,7 +211,7 @@ const DoctorProfile = () => {
                                         <p className="font-medium text-gray-700">{currency} {profileData.fees}</p>
                                     </div> */}
                                 </div>
-
+                            
                                 <div className="bg-gray-50 rounded-lg p-4">
                                     <h3 className="text-lg font-medium text-gray-800 mb-3">Availability Settings</h3>
                                     <div className="flex items-center">
@@ -236,7 +236,7 @@ const DoctorProfile = () => {
                                         Toggle this setting to control your availability for new appointments.
                                     </p>
                                 </div>
-                            </div>
+                            </div> 
                         </div>
                     </div>
                 </div>

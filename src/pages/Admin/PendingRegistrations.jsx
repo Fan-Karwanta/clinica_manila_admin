@@ -120,6 +120,18 @@ const PendingRegistrations = () => {
                                             <span className="text-gray-600">Email: </span>
                                             <span className="font-semibold">{user.email || 'N/A'}</span>
                                         </div>
+                                        <div className="mb-2">
+                                            <span className="text-gray-600">Date Registered: </span>
+                                            <span className="font-semibold">
+                                                {user.date ? new Date(user.date).toLocaleString('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                }) : 'N/A'}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                                 

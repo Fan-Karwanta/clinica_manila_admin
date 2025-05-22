@@ -19,12 +19,12 @@ const UsersList = () => {
     const [statsLoading, setStatsLoading] = useState(false);
     const [statsModalVisible, setStatsModalVisible] = useState(false);
     const [selectedUserStats, setSelectedUserStats] = useState(null);
-    const { aToken } = useContext(AdminContext);
+    const { aToken, backendUrl } = useContext(AdminContext);
 
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('/api/admin/users', {
+            const response = await axios.get(`${backendUrl}/api/admin/users`, {
                 headers: {
                     Authorization: `Bearer ${aToken}`
                 }
@@ -65,7 +65,7 @@ const UsersList = () => {
     const fetchAppointmentStats = async () => {
         try {
             setStatsLoading(true);
-            const response = await axios.get('/api/admin/users-appointment-stats', {
+            const response = await axios.get(`${backendUrl}/api/admin/users-appointment-stats`, {
                 headers: {
                     Authorization: `Bearer ${aToken}`
                 }
@@ -116,7 +116,7 @@ const UsersList = () => {
     const handleBlock = async () => {
         try {
             const response = await axios.put(
-                `/api/admin/update-approval/${selectedUser._id}`, 
+                `${backendUrl}/api/admin/update-approval/${selectedUser._id}`, 
                 { status: 'blocked' },
                 {
                     headers: {
@@ -142,7 +142,7 @@ const UsersList = () => {
     const handleDelete = async () => {
         try {
             const response = await axios.delete(
-                `/api/admin/delete-user/${selectedUser._id}`,
+                `${backendUrl}/api/admin/delete-user/${selectedUser._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${aToken}`
