@@ -3,6 +3,7 @@ import { DoctorContext } from '../../context/DoctorContext'
 import { AppContext } from '../../context/AppContext'
 import { assets } from '../../assets/assets'
 import CancellationModal from '../../components/CancellationModal'
+import AppointmentReasonModal from '../../components/AppointmentReasonModal'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 
@@ -15,6 +16,10 @@ const DoctorAppointments = () => {
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null)
   const [exportLoading, setExportLoading] = useState(false)
   const tableRef = useRef(null)
+  
+  // State for appointment reason modal
+  const [showReasonModal, setShowReasonModal] = useState(false)
+  const [selectedAppointment, setSelectedAppointment] = useState(null)
 
   useEffect(() => {
     if (dToken) {
@@ -463,6 +468,20 @@ const DoctorAppointments = () => {
                       {item.slotTime}
                     </span>
                   </div>
+                  {item.appointmentReason && (
+                    <button 
+                      onClick={() => {
+                        setSelectedAppointment(item);
+                        setShowReasonModal(true);
+                      }}
+                      className="mt-2 px-2.5 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-md text-xs hover:bg-blue-100 transition-colors flex items-center"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      View Reason
+                    </button>
+                  )}
                 </div>
                 
                 {/* Status/Actions */}
@@ -525,6 +544,17 @@ const DoctorAppointments = () => {
             }
           }}
           title="Cancel Appointment"
+        />
+        
+        {/* Appointment Reason Modal */}
+        <AppointmentReasonModal
+          isOpen={showReasonModal}
+          onClose={() => {
+            setShowReasonModal(false);
+            setSelectedAppointment(null);
+          }}
+          appointmentReason={selectedAppointment?.appointmentReason}
+          patientName={selectedAppointment ? `${selectedAppointment.userData.lastName}, ${selectedAppointment.userData.firstName} ${selectedAppointment.userData.middleName || ''}` : ''}
         />
       </div>
     </div>

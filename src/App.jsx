@@ -16,6 +16,7 @@ import DoctorAppointments from './pages/Doctor/DoctorAppointments';
 import DoctorDashboard from './pages/Doctor/DoctorDashboard';
 import DoctorProfile from './pages/Doctor/DoctorProfile';
 import DoctorAnalytics from './pages/Doctor/DoctorAnalytics';
+import DoctorAppointmentHistory from './pages/Doctor/DoctorAppointmentHistory';
 import PendingRegistrations from './pages/Admin/PendingRegistrations';
 import AdminAnalytics from './pages/Admin/AdminAnalytics';
 import UsersList from './pages/Admin/UsersList';
@@ -40,6 +41,7 @@ const App = () => {
           <Route path='/doctor-list' element={<DoctorsList />} />
           <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
           <Route path='/doctor-appointments' element={<DoctorAppointments />} />
+          <Route path='/doctor-appointment-history' element={<DoctorAppointmentHistory />} />
           <Route path='/doctor-profile' element={<DoctorProfile />} />
           <Route path='/doctor-analytics' element={<DoctorAnalytics />} />
           <Route path='/pending-registrations' element={<PendingRegistrations />} />

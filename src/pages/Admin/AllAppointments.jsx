@@ -4,6 +4,7 @@ import { useContext } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
 import CancellationModal from '../../components/CancellationModal'
+import AppointmentReasonModal from '../../components/AppointmentReasonModal'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 
@@ -24,6 +25,10 @@ const AllAppointments = () => {
   // State for cancellation modal
   const [showCancellationModal, setShowCancellationModal] = useState(false)
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null)
+  
+  // State for appointment reason modal
+  const [showReasonModal, setShowReasonModal] = useState(false)
+  const [selectedAppointment, setSelectedAppointment] = useState(null)
   
   // State for search and PDF export
   const [searchTerm, setSearchTerm] = useState('')
@@ -576,7 +581,20 @@ const AllAppointments = () => {
              {/* <img src={item.userData.image} className='w-8 rounded-full' alt="" />*/} <p>{item.userData.lastName}, {item.userData.firstName}, {item.userData.middleName}</p>
             </div>
            {/* <p className='max-sm:hidden'>{calculateAge(item.userData.dob)}</p> */}
-            <p>{slotDateFormat(item.slotDate)}, {item.slotTime}</p>
+            <div>
+              <p>{slotDateFormat(item.slotDate)}, {item.slotTime}</p>
+              {item.appointmentReason && (
+                <button 
+                  onClick={() => {
+                    setSelectedAppointment(item);
+                    setShowReasonModal(true);
+                  }}
+                  className="text-xs mt-1 px-2 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-md hover:bg-blue-100 transition-colors"
+                >
+                  View Reason
+                </button>
+              )}
+            </div>
             <div className='flex items-center gap-4'>
               <img src={item.docData.image} className='w-8 rounded-full bg-gray-200' alt="" /> <p>{item.docData.name}</p>
             </div>
@@ -623,6 +641,17 @@ const AllAppointments = () => {
           }
         }}
         title="Cancel Appointment"
+      />
+      
+      {/* Appointment Reason Modal */}
+      <AppointmentReasonModal
+        isOpen={showReasonModal}
+        onClose={() => {
+          setShowReasonModal(false);
+          setSelectedAppointment(null);
+        }}
+        appointmentReason={selectedAppointment?.appointmentReason}
+        patientName={selectedAppointment ? `${selectedAppointment.userData.lastName}, ${selectedAppointment.userData.firstName} ${selectedAppointment.userData.middleName || ''}` : ''}
       />
     </div>
   )

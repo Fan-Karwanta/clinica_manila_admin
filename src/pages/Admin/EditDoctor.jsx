@@ -15,10 +15,6 @@ const EditDoctor = () => {
     const [name, setName] = useState('')
     const [nameExtension, setNameExtension] = useState('')
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [passwordsMatch, setPasswordsMatch] = useState(true)
-    const [showPassword, setShowPassword] = useState(false)
     const [experience, setExperience] = useState('1 Year')
     const [fees, setFees] = useState('')
     const [about, setAbout] = useState('')
@@ -69,22 +65,13 @@ const EditDoctor = () => {
         fetchDoctor()
     }, [aToken, id, getDoctorById, navigate])
 
-    // Check if passwords match whenever either password field changes
-    useEffect(() => {
-        if (password === '' && confirmPassword === '') {
-            setPasswordsMatch(true);
-        } else if (password !== '' && confirmPassword !== '') {
-            setPasswordsMatch(password === confirmPassword);
-        }
-    }, [password, confirmPassword]);
+
 
     const onSubmitHandler = async (event) => {
         event.preventDefault()
 
         try {
-            if (!passwordsMatch) {
-                return toast.error('Passwords do not match')
-            }
+
 
             const formData = new FormData();
 
@@ -95,9 +82,7 @@ const EditDoctor = () => {
             formData.append('name', name)
             formData.append('name_extension', nameExtension)
             formData.append('email', email)
-            if (password) {
-                formData.append('password', password)
-            }
+
             formData.append('experience', experience)
             formData.append('fees', Number(fees))
             formData.append('about', about)
@@ -116,9 +101,7 @@ const EditDoctor = () => {
         }
     }
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword)
-    }
+
 
     if (loading) {
         return <div className="flex justify-center items-center h-screen">Loading...</div>
@@ -166,42 +149,7 @@ const EditDoctor = () => {
                             <input onChange={e => setEmail(e.target.value)} value={email} className='border rounded px-3 py-2' type="email" placeholder='Email' required />
                         </div>
 
-                        <div className='flex-1 flex flex-col gap-1'>
-                            <p>Change Password (leave blank to keep current)</p>
-                            <input 
-                                onChange={e => setPassword(e.target.value)} 
-                                value={password} 
-                                className={`border rounded px-3 py-2 ${!passwordsMatch && password && confirmPassword ? 'border-red-500' : ''}`}
-                                type={showPassword ? "text" : "password"} 
-                                placeholder='New Password' 
-                            />
-                        </div>
 
-                        <div className='flex-1 flex flex-col gap-1'>
-                            <p>Confirm Password</p>
-                            <input 
-                                onChange={e => setConfirmPassword(e.target.value)} 
-                                value={confirmPassword} 
-                                className={`border rounded px-3 py-2 ${!passwordsMatch && password && confirmPassword ? 'border-red-500' : ''}`}
-                                type={showPassword ? "text" : "password"} 
-                                placeholder='Confirm Password' 
-                                disabled={!password}
-                            />
-                            {!passwordsMatch && password && confirmPassword && (
-                                <p className="text-red-500 text-sm mt-1">Passwords do not match</p>
-                            )}
-                        </div>
-
-                        <div className='flex items-center gap-2 mt-1'>
-                            <input 
-                                type="checkbox" 
-                                id="show-password" 
-                                checked={showPassword}
-                                onChange={togglePasswordVisibility}
-                                className="cursor-pointer"
-                            />
-                            <label htmlFor="show-password" className="text-sm cursor-pointer">Show Password</label>
-                        </div>
 
                         <div className='flex-1 flex flex-col gap-1'>
                             <p>License ID Number</p>
@@ -263,12 +211,7 @@ const EditDoctor = () => {
 
                 <button 
                     type='submit' 
-                    className={`px-10 py-3 mt-4 text-white rounded-full ${
-                        (!passwordsMatch && password && confirmPassword) 
-                            ? 'bg-gray-400 cursor-not-allowed' 
-                            : 'bg-primary hover:bg-primary-dark'
-                    }`}
-                    disabled={!passwordsMatch && password && confirmPassword}
+                    className="px-10 py-3 mt-4 text-white rounded-full bg-primary hover:bg-primary-dark"
                 >
                     Update Doctor
                 </button>

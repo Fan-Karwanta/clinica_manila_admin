@@ -314,7 +314,7 @@ const UsersList = () => {
     return (
         <div style={{ padding: '20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h1>Users List</h1>
+                <h1>Patients List</h1>
                 <Space>
                     <Input
                         placeholder="Search users by name or email"

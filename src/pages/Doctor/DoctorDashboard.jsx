@@ -3,6 +3,7 @@ import { DoctorContext } from '../../context/DoctorContext'
 import { AppContext } from '../../context/AppContext'
 import { assets } from '../../assets/assets'
 import CancellationModal from '../../components/CancellationModal'
+import AppointmentReasonModal from '../../components/AppointmentReasonModal'
 
 const DoctorDashboard = () => {
   const { dToken, dashData, getDashData, cancelAppointment, completeAppointment, profileData, getProfileData } = useContext(DoctorContext)
@@ -12,6 +13,10 @@ const DoctorDashboard = () => {
   // State for cancellation modal
   const [showCancellationModal, setShowCancellationModal] = useState(false)
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null)
+  
+  // State for appointment reason modal
+  const [showReasonModal, setShowReasonModal] = useState(false)
+  const [selectedAppointment, setSelectedAppointment] = useState(null)
 
   useEffect(() => {
     if (dToken) {
@@ -292,13 +297,28 @@ const DoctorDashboard = () => {
                           <p className='text-gray-800 font-medium truncate'>
                             {item.userData?.lastName || ''}, {item.userData?.firstName || ''}
                           </p>
-                          <div className='flex items-center gap-2 mt-1'>
+                          <div className='flex flex-wrap items-center gap-2 mt-1'>
                             <span className='text-xs font-medium bg-blue-50 text-blue-700 px-2 py-0.5 rounded'>
                               {slotDateFormat(item.slotDate)}
                             </span>
                             <span className='text-xs font-medium bg-gray-100 text-gray-700 px-2 py-0.5 rounded'>
                               {item.slotTime}
                             </span>
+                            {item.appointmentReason && (
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedAppointment(item);
+                                  setShowReasonModal(true);
+                                }}
+                                className="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 rounded hover:bg-blue-100 transition-colors flex items-center"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                View Reason
+                              </button>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -475,6 +495,17 @@ const DoctorDashboard = () => {
           }
         }}
         title="Cancel Appointment"
+      />
+      
+      {/* Appointment Reason Modal */}
+      <AppointmentReasonModal
+        isOpen={showReasonModal}
+        onClose={() => {
+          setShowReasonModal(false);
+          setSelectedAppointment(null);
+        }}
+        appointmentReason={selectedAppointment?.appointmentReason}
+        patientName={selectedAppointment ? `${selectedAppointment.userData?.lastName || ''}, ${selectedAppointment.userData?.firstName || ''} ${selectedAppointment.userData?.middleName || ''}` : ''}
       />
     </div>
   )

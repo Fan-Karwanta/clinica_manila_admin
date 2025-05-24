@@ -11,6 +11,7 @@ const DoctorContextProvider = (props) => {
 
     const [dToken, setDToken] = useState(localStorage.getItem('dToken') ? localStorage.getItem('dToken') : '')
     const [appointments, setAppointments] = useState([])
+    const [appointmentHistory, setAppointmentHistory] = useState([])
     const [dashData, setDashData] = useState({
         appointments: 0,
         patients: 0,
@@ -25,7 +26,8 @@ const DoctorContextProvider = (props) => {
         fees: 0,
         about: '',
         available: true,
-        address: {}
+        address: {},
+        dayOff: ''
     })
 
     // Getting Doctor appointment data from Database using API
@@ -156,6 +158,45 @@ const DoctorContextProvider = (props) => {
         }
     }
 
+    // Getting Doctor appointment history (completed appointments) from Database using API
+    const getAppointmentHistory = async () => {
+        try {
+            const { data } = await axios.get(backendUrl + '/api/doctor/appointment-history', { headers: { dToken } })
+
+            if (data.success) {
+                setAppointmentHistory(data.appointments.reverse())
+            } else {
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
+    }
+
+    // Function to add consultation summary to a completed appointment
+    const addConsultationSummary = async (appointmentId, consultationSummary) => {
+        try {
+            const { data } = await axios.post(
+                backendUrl + '/api/doctor/add-consultation-summary', 
+                { appointmentId, consultationSummary }, 
+                { headers: { dToken } }
+            )
+
+            if (data.success) {
+                toast.success(data.message)
+                getAppointmentHistory()
+            } else {
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
+    }
+
     const value = {
         dToken, setDToken, backendUrl,
         appointments,
@@ -165,6 +206,9 @@ const DoctorContextProvider = (props) => {
         dashData, getDashData,
         profileData, setProfileData,
         getProfileData,
+        appointmentHistory,
+        getAppointmentHistory,
+        addConsultationSummary
     }
 
     return (
