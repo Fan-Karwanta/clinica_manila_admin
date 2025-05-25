@@ -95,22 +95,36 @@ const AdminContextProvider = (props) => {
         }
     }, [aToken]);
 
+    // Utility function to format specialty names
+    const formatSpecialty = (specialty) => {
+        // Replace underscores with spaces for display purposes
+        if (specialty === 'Internal_Medicine') {
+            return 'Internal Medicine';
+        }
+        return specialty;
+    }
+
     // Getting all Doctors data from Database using API
     const getAllDoctors = async () => {
-
         try {
-
             const { data } = await axios.get(backendUrl + '/api/admin/all-doctors', { headers: { Authorization: `Bearer ${aToken}` } })
             if (data.success) {
-                setDoctors(data.doctors)
+                // Filter out archived doctors before setting them in the state
+                const activeDoctors = data.doctors.filter(doctor => !doctor.isArchived)
+                
+                // Format specialties for display
+                const formattedDoctors = activeDoctors.map(doctor => ({
+                    ...doctor,
+                    displaySpeciality: formatSpecialty(doctor.speciality)
+                }))
+                
+                setDoctors(formattedDoctors)
             } else {
                 toast.error(data.message)
             }
-
         } catch (error) {
             toast.error(error.message)
         }
-
     }
 
     // Function to get a single doctor by ID
