@@ -167,7 +167,11 @@ const DayOffManagement = () => {
                         </div>
                         <div>
                           <div className="text-sm font-medium text-gray-900">{doctor.name}</div>
-                          <div className="text-xs text-gray-500">{doctor.displaySpeciality || (doctor.speciality === 'Internal_Medicine' ? 'Internal Medicine' : doctor.speciality)}</div>
+                          <div className="text-xs text-gray-500">{doctor.displaySpeciality || 
+                            (doctor.speciality === 'Internal_Medicine' ? 'Internal Medicine' : 
+                             doctor.speciality === 'General_Physician' || doctor.speciality === 'General_physician' ? 'General Physician' : 
+                             doctor.speciality.includes('_') ? doctor.speciality.replace(/_/g, ' ') :
+                             doctor.speciality)}</div>
                         </div>
                       </div>
                     </td>

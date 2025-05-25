@@ -122,7 +122,8 @@ const DoctorsList = () => {
                       <div className="text-sm text-gray-900">
                         {doctor.displaySpeciality || 
                          (doctor.speciality === 'Internal_Medicine' ? 'Internal Medicine' : 
-                          doctor.speciality === 'General_Physician' ? 'General Physician' : 
+                          doctor.speciality === 'General_Physician' || doctor.speciality === 'General_physician' ? 'General Physician' : 
+                          doctor.speciality.includes('_') ? doctor.speciality.replace(/_/g, ' ') :
                           doctor.speciality)}
                       </div>
                       <div className="text-sm text-gray-500">{doctor.degree}</div>
