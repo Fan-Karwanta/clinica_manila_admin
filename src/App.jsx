@@ -21,6 +21,7 @@ import PendingRegistrations from './pages/Admin/PendingRegistrations';
 import AdminAnalytics from './pages/Admin/AdminAnalytics';
 import UsersList from './pages/Admin/UsersList';
 import Archive from './pages/Admin/Archive';
+import DayOffManagement from './pages/Admin/DayOffManagement';
 
 const App = () => {
 
@@ -49,6 +50,7 @@ const App = () => {
           <Route path='/admin-analytics' element={<AdminAnalytics />} />
           <Route path='/users-list' element={<UsersList />} />
           <Route path='/archive' element={<Archive />} />
+          <Route path='/day-off-management' element={<DayOffManagement />} />
         </Routes>
       </div>
     </div>

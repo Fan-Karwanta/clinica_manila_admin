@@ -3,7 +3,7 @@ import { assets } from '../assets/assets'
 import { NavLink } from 'react-router-dom'
 import { DoctorContext } from '../context/DoctorContext'
 import { AdminContext } from '../context/AdminContext'
-import { FiArchive, FiUsers, FiClock } from 'react-icons/fi'
+import { FiArchive, FiUsers, FiClock, FiCalendar } from 'react-icons/fi'
 import { FaUserMd } from 'react-icons/fa'
 
 const Sidebar = () => {
@@ -35,10 +35,15 @@ const Sidebar = () => {
           <img className='w-5 h-5' src={assets.verify_icon} alt='' />
           <p className='hidden md:block'>Pending Registrations</p>
         </NavLink>
+        <NavLink to={'/day-off-management'} className={({ isActive }) => `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`}>
+          <FiCalendar className='w-5 h-5 text-[#515151]' />
+          <p className='hidden md:block'>Day-Off Management</p>
+        </NavLink>
         <NavLink to={'/doctor-list'} className={({ isActive }) => `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`}>
           <FaUserMd className='w-5 h-5 text-[#515151]' />
           <p className='hidden md:block'>Doctors List</p>
         </NavLink>
+
         <NavLink to={'/users-list'} className={({ isActive }) => `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`}>
           <FiUsers className='w-5 h-5 text-[#515151]' />
           <p className='hidden md:block'>Patients List</p>

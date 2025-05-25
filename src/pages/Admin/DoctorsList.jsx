@@ -3,7 +3,6 @@ import { AdminContext } from '../../context/AdminContext'
 import { Link } from 'react-router-dom'
 import { FaEdit, FaArchive, FaCheck, FaTimes } from 'react-icons/fa'
 import Modal from 'react-modal'
-import DayOffManager from '../../components/DayOffManager'
 
 // Set the app element for accessibility
 Modal.setAppElement('#root')
@@ -67,10 +66,6 @@ const DoctorsList = () => {
           Add New Doctor
         </Link>
       </div>
-      
-      {/* Day Off Manager Component */}
-      <DayOffManager />
-
       <div className="mb-4">
         <input
           type="text"
