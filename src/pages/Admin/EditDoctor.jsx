@@ -6,6 +6,33 @@ import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
 import { useParams, useNavigate } from 'react-router-dom'
 
+// Helper function to normalize specialty values
+const normalizeSpecialty = (specialty) => {
+    if (!specialty) return ''
+    
+    // Convert to lowercase for case-insensitive comparison
+    const lowerSpecialty = specialty.toLowerCase()
+    
+    // Map of possible database values to dropdown option values
+    const specialtyMap = {
+        'dermatologist': 'Dermatologist',
+        'internal medicine': 'Internal_Medicine',
+        'internal_medicine': 'Internal_Medicine',
+        'cardiologist': 'Cardiologist',
+        'obgynecologist': 'Obgynecologist',
+        'ophthalmologist': 'Ophthalmologist',
+        'surgeon': 'Surgeon',
+        'ent': 'ENT',
+        'general physician': 'General_Physician',
+        'general_physician': 'General_Physician',
+        'pediatrician': 'Pediatrician',
+        'pediatricians': 'Pediatrician',
+        'neurologist': 'Neurologist'
+    }
+    
+    return specialtyMap[lowerSpecialty] || specialty
+}
+
 const EditDoctor = () => {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -18,7 +45,7 @@ const EditDoctor = () => {
     const [experience, setExperience] = useState('1 Year')
     const [fees, setFees] = useState('')
     const [about, setAbout] = useState('')
-    const [speciality, setSpeciality] = useState('Dermatologist')
+    const [speciality, setSpeciality] = useState('')
     const [degree, setDegree] = useState('')
     const [address1, setAddress1] = useState('')
     const [address2, setAddress2] = useState('')
@@ -36,14 +63,28 @@ const EditDoctor = () => {
             setLoading(true)
             try {
                 const doctor = await getDoctorById(id)
+                console.log('Doctor data received:', doctor)
+                
                 if (doctor) {
+                    // Set all fields from doctor data
                     setName(doctor.name || '')
                     setNameExtension(doctor.name_extension || '')
                     setEmail(doctor.email || '')
                     setExperience(doctor.experience || '1 Year')
                     setFees(doctor.fees || '')
                     setAbout(doctor.about || '')
-                    setSpeciality(doctor.speciality || 'Dermatologist')
+                    
+                    // Explicitly handle specialty field
+                    if (doctor.speciality) {
+                        const normalizedSpecialty = normalizeSpecialty(doctor.speciality)
+                        console.log('Original specialty:', doctor.speciality)
+                        console.log('Normalized specialty:', normalizedSpecialty)
+                        setSpeciality(normalizedSpecialty)
+                    } else {
+                        console.log('No specialty found in doctor data')
+                        setSpeciality('')
+                    }
+                    
                     setDegree(doctor.degree || '')
                     setAddress1(doctor.address?.line1 || '')
                     setAddress2(doctor.address?.line2 || '')
@@ -54,7 +95,7 @@ const EditDoctor = () => {
                     navigate('/doctor-list')
                 }
             } catch (error) {
-                console.error(error)
+                console.error('Error fetching doctor:', error)
                 toast.error('An error occurred while loading doctor data')
                 navigate('/doctor-list')
             } finally {
@@ -183,6 +224,9 @@ const EditDoctor = () => {
                                 <option value="Ophthalmologist">Ophthalmologist</option>
                                 <option value="Surgeon">Surgeon</option>
                                 <option value="ENT">ENT</option>
+                                <option value="General_Physician">General physician</option>
+                                <option value="Pediatrician">Pediatricians</option>
+                                <option value="Neurologist">Neurologist</option>
                             </select>
                         </div>
 

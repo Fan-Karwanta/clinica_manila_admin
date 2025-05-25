@@ -220,19 +220,23 @@ const DoctorAppointmentHistory = () => {
               placeholder="Search patients..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary w-full md:w-64"
             />
-            <img
-              src={assets.search_icon}
-              alt="Search"
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4"
-            />
+            <svg 
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
           </div>
           
           <button
             onClick={exportToPDF}
             disabled={exportLoading || filteredAppointments.length === 0}
-            className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md text-white ${
+            className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-md text-white font-medium shadow-sm transition-colors ${
               exportLoading || filteredAppointments.length === 0
                 ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-primary hover:bg-primary/90'
@@ -245,7 +249,15 @@ const DoctorAppointmentHistory = () => {
               </>
             ) : (
               <>
-                <img src={assets.download_icon} alt="Export" className="w-4 h-4" />
+                <svg 
+                  className="w-5 h-5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
                 <span>Export PDF</span>
               </>
             )}

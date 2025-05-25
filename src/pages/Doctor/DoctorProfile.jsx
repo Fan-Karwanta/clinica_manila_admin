@@ -35,6 +35,15 @@ const DoctorProfile = () => {
                 toast.success(data.message)
                 setIsEdit(false)
                 getProfileData()
+                
+                // Manually trigger the day off checker to update availability status in real-time
+                try {
+                    await axios.get(backendUrl + '/api/doctor/update-day-off-availability', { headers: { dToken } })
+                    console.log('Day off availability updated after profile change')
+                } catch (dayOffError) {
+                    console.error('Error updating day off availability:', dayOffError)
+                    // Continue even if day off check fails
+                }
             } else {
                 toast.error(data.message)
             }

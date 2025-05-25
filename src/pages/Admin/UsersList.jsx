@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, message, Modal, Input, Space, Popconfirm, Image, Tooltip, Typography, Badge, Statistic, Card } from 'antd';
-import { SearchOutlined, DeleteOutlined, EyeOutlined, BlockOutlined, CalendarOutlined, CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined, EyeOutlined, BlockOutlined, CalendarOutlined, CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, InboxOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useContext } from 'react';
 import { AdminContext } from '../../context/AdminContext';
@@ -19,7 +19,7 @@ const UsersList = () => {
     const [statsLoading, setStatsLoading] = useState(false);
     const [statsModalVisible, setStatsModalVisible] = useState(false);
     const [selectedUserStats, setSelectedUserStats] = useState(null);
-    const { aToken, backendUrl } = useContext(AdminContext);
+    const { aToken, backendUrl, archiveUser } = useContext(AdminContext);
 
     const fetchUsers = async () => {
         try {
@@ -139,27 +139,20 @@ const UsersList = () => {
         }
     };
 
-    const handleDelete = async () => {
+    const handleArchive = async () => {
         try {
-            const response = await axios.delete(
-                `${backendUrl}/api/admin/delete-user/${selectedUser._id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${aToken}`
-                    }
-                }
-            );
+            const success = await archiveUser(selectedUser._id);
 
-            if (response.data.success) {
-                message.success(response.data.message || 'User deleted successfully');
+            if (success) {
+                message.success('User archived successfully');
                 fetchUsers();
                 setDeleteModalVisible(false);
             } else {
-                message.error(response.data.message || 'Failed to delete user');
+                message.error('Failed to archive user');
             }
         } catch (error) {
-            console.error('Error deleting user:', error);
-            message.error(error.response?.data?.message || 'Failed to delete user');
+            console.error('Error archiving user:', error);
+            message.error(error.response?.data?.message || 'Failed to archive user');
         }
     };
 
@@ -299,10 +292,10 @@ const UsersList = () => {
                             disabled={user.approval_status === 'blocked'}
                         />
                     </Tooltip>
-                    <Tooltip title="Delete User">
+                    <Tooltip title="Archive User">
                         <Button 
-                            danger
-                            icon={<DeleteOutlined />}
+                            style={{ color: '#d48806', borderColor: '#d48806' }} 
+                            icon={<InboxOutlined />} 
                             onClick={() => showDeleteModal(user)}
                         />
                     </Tooltip>
@@ -351,14 +344,15 @@ const UsersList = () => {
             </Modal>
 
             <Modal
-                title="Delete User"
+                title="Archive User"
                 open={deleteModalVisible}
-                onOk={handleDelete}
+                onOk={handleArchive}
                 onCancel={() => setDeleteModalVisible(false)}
-                okText="Delete"
+                okText="Archive"
+                okButtonProps={{ style: { backgroundColor: '#d48806' } }}
                 cancelText="Cancel"
             >
-                <p>Are you sure you want to delete this user? This action cannot be undone.</p>
+                <p>Are you sure you want to archive this user? The user will be moved to the archive.</p>
                 <p>Name: {selectedUser?.firstName} {selectedUser?.lastName}</p>
                 <p>Email: {selectedUser?.email}</p>
             </Modal>

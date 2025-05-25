@@ -20,6 +20,7 @@ import DoctorAppointmentHistory from './pages/Doctor/DoctorAppointmentHistory';
 import PendingRegistrations from './pages/Admin/PendingRegistrations';
 import AdminAnalytics from './pages/Admin/AdminAnalytics';
 import UsersList from './pages/Admin/UsersList';
+import Archive from './pages/Admin/Archive';
 
 const App = () => {
 
@@ -47,6 +48,7 @@ const App = () => {
           <Route path='/pending-registrations' element={<PendingRegistrations />} />
           <Route path='/admin-analytics' element={<AdminAnalytics />} />
           <Route path='/users-list' element={<UsersList />} />
+          <Route path='/archive' element={<Archive />} />
         </Routes>
       </div>
     </div>

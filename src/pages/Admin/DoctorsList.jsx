@@ -1,18 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { Link } from 'react-router-dom'
-import { FaEdit, FaTrash, FaCheck, FaTimes } from 'react-icons/fa'
+import { FaEdit, FaArchive, FaCheck, FaTimes } from 'react-icons/fa'
 import Modal from 'react-modal'
+import DayOffManager from '../../components/DayOffManager'
 
 // Set the app element for accessibility
 Modal.setAppElement('#root')
 
 const DoctorsList = () => {
-  const { doctors, changeAvailability, aToken, getAllDoctors, deleteDoctor } = useContext(AdminContext)
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
-  const [doctorToDelete, setDoctorToDelete] = useState(null)
+  const { doctors, changeAvailability, aToken, getAllDoctors, archiveDoctor } = useContext(AdminContext)
+  const [archiveModalOpen, setArchiveModalOpen] = useState(false)
+  const [doctorToArchive, setDoctorToArchive] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [isArchiving, setIsArchiving] = useState(false)
 
   useEffect(() => {
     if (aToken) {
@@ -20,29 +21,33 @@ const DoctorsList = () => {
     }
   }, [aToken, getAllDoctors])
 
-  const handleDeleteClick = (doctor) => {
-    setDoctorToDelete(doctor)
-    setDeleteModalOpen(true)
+  const handleArchiveClick = (doctor) => {
+    setDoctorToArchive(doctor)
+    setArchiveModalOpen(true)
   }
 
-  const confirmDelete = async () => {
-    if (!doctorToDelete) return
+  const confirmArchive = async () => {
+    if (!doctorToArchive) return
     
-    setIsDeleting(true)
+    setIsArchiving(true)
     try {
-      const success = await deleteDoctor(doctorToDelete._id)
+      const success = await archiveDoctor(doctorToArchive._id)
       if (success) {
-        setDeleteModalOpen(false)
-        setDoctorToDelete(null)
+        setArchiveModalOpen(false)
+        setDoctorToArchive(null)
+        // Refresh the doctors list
+        getAllDoctors()
       }
+    } catch (error) {
+      console.error('Error archiving doctor:', error)
     } finally {
-      setIsDeleting(false)
+      setIsArchiving(false)
     }
   }
 
-  const cancelDelete = () => {
-    setDeleteModalOpen(false)
-    setDoctorToDelete(null)
+  const cancelArchive = () => {
+    setArchiveModalOpen(false)
+    setDoctorToArchive(null)
   }
 
   const filteredDoctors = doctors.filter(doctor => 
@@ -62,6 +67,9 @@ const DoctorsList = () => {
           Add New Doctor
         </Link>
       </div>
+      
+      {/* Day Off Manager Component */}
+      <DayOffManager />
 
       <div className="mb-4">
         <input
@@ -116,7 +124,9 @@ const DoctorsList = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{doctor.speciality}</div>
+                      <div className="text-sm text-gray-900">
+                        {doctor.speciality === 'Internal_Medicine' ? 'Internal Medicine' : doctor.speciality}
+                      </div>
                       <div className="text-sm text-gray-500">{doctor.degree}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -156,10 +166,11 @@ const DoctorsList = () => {
                           <FaEdit />
                         </Link>
                         <button
-                          onClick={() => handleDeleteClick(doctor)}
-                          className="text-red-600 hover:text-red-900 bg-red-100 p-2 rounded-full"
+                          onClick={() => handleArchiveClick(doctor)}
+                          className="text-amber-600 hover:text-amber-900 bg-amber-100 p-2 rounded-full"
+                          title="Archive Doctor"
                         >
-                          <FaTrash />
+                          <FaArchive />
                         </button>
                       </div>
                     </td>
@@ -177,11 +188,11 @@ const DoctorsList = () => {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Archive Confirmation Modal */}
       <Modal
-        isOpen={deleteModalOpen}
-        onRequestClose={cancelDelete}
-        contentLabel="Delete Doctor Confirmation"
+        isOpen={archiveModalOpen}
+        onRequestClose={cancelArchive}
+        contentLabel="Archive Doctor Confirmation"
         className="max-w-md mx-auto mt-40 bg-white rounded-lg shadow-lg p-6"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center pt-20"
         style={{
@@ -193,24 +204,24 @@ const DoctorsList = () => {
           }
         }}
       >
-        <h2 className="text-xl font-bold mb-4">Confirm Delete</h2>
+        <h2 className="text-xl font-bold mb-4">Confirm Archive</h2>
         <p className="mb-6">
-          Are you sure you want to delete Dr. {doctorToDelete?.name}? This action cannot be undone.
+          Are you sure you want to archive Dr. {doctorToArchive?.name}? The doctor will be moved to the archive.
         </p>
-        <div className="flex justify-end space-x-4">
+        <div className="flex justify-end space-x-3">
           <button
-            onClick={cancelDelete}
-            className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
-            disabled={isDeleting}
+            onClick={cancelArchive}
+            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+            disabled={isArchiving}
           >
             Cancel
           </button>
           <button
-            onClick={confirmDelete}
-            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-            disabled={isDeleting}
+            onClick={confirmArchive}
+            className="px-4 py-2 bg-amber-600 rounded-md text-white hover:bg-amber-700"
+            disabled={isArchiving}
           >
-            {isDeleting ? "Deleting..." : "Delete"}
+            {isArchiving ? 'Archiving...' : 'Archive'}
           </button>
         </div>
       </Modal>
