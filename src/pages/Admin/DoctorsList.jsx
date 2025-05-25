@@ -120,7 +120,10 @@ const DoctorsList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
-                        {doctor.displaySpeciality || (doctor.speciality === 'Internal_Medicine' ? 'Internal Medicine' : doctor.speciality)}
+                        {doctor.displaySpeciality || 
+                         (doctor.speciality === 'Internal_Medicine' ? 'Internal Medicine' : 
+                          doctor.speciality === 'General_Physician' ? 'General Physician' : 
+                          doctor.speciality)}
                       </div>
                       <div className="text-sm text-gray-500">{doctor.degree}</div>
                     </td>
