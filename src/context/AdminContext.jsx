@@ -98,10 +98,14 @@ const AdminContextProvider = (props) => {
     // Utility function to format specialty names
     const formatSpecialty = (specialty) => {
         // Replace underscores with spaces for display purposes
-        if (specialty === 'Internal_Medicine') {
-            return 'Internal Medicine';
-        }
-        return specialty;
+        if (!specialty) return '';
+        
+        // Handle specific cases
+        if (specialty === 'Internal_Medicine') return 'Internal Medicine';
+        if (specialty === 'General_Physician' || specialty === 'General_physician') return 'General Physician';
+        
+        // General case: replace all underscores with spaces
+        return specialty.includes('_') ? specialty.replace(/_/g, ' ') : specialty;
     }
 
     // Getting all Doctors data from Database using API
